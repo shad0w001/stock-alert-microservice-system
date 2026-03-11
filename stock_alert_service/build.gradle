@@ -21,6 +21,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://packages.confluent.io/maven/' }
 }
 
 dependencies {
@@ -29,6 +30,8 @@ dependencies {
     implementation libs.spring.boot.starter.data.jpa
     implementation libs.spring.boot.starter.kafka
     implementation libs.spring.boot.starter.web
+    implementation libs.kafka.avro.serializer
+    implementation libs.jackson.datatype.jsr310
 
     runtimeOnly libs.postgresql
     compileOnly libs.lombok

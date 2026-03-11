@@ -2,6 +2,7 @@
 # Core Frameworks
 springBoot = "4.0.3"
 springDependencyManagement = "1.1.7"
+confluent = "7.5.0"
 
 # Versions
 java = "21"
@@ -12,6 +13,9 @@ spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-b
 spring-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 spring-boot-starter-kafka = { group = "org.springframework.boot", name = "spring-boot-starter-kafka" }
 postgresql = { group = "org.postgresql", name = "postgresql" }
+kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
+jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
+spring-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
 
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 
