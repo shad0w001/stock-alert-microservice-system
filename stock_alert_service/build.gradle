@@ -1,0 +1,44 @@
+plugins {
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+    id 'java'
+}
+
+group = 'com.internship'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":shared")
+
+    implementation libs.spring.boot.starter.data.jpa
+    implementation libs.spring.boot.starter.kafka
+    implementation libs.spring.boot.starter.web
+
+    runtimeOnly libs.postgresql
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    testImplementation libs.spring.boot.starter.test
+    testImplementation libs.spring.kafka.test
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

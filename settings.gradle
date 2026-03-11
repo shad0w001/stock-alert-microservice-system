@@ -1,0 +1,5 @@
+rootProject.name = 'stock_alert_microservice_system'
+
+include("shared")
+include("stock_alert_service")
+include("stock_monitor_service")
