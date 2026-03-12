@@ -39,5 +39,9 @@ public final class ApiError {
     public static ApiError forbidden(String code, String message) {
         return new ApiError(code, message, 403);
     }
+
+    public static ApiError unauthorized(String code, String message) {
+        return new ApiError(code, message, 401);
+    }
 }
 

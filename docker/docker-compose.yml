@@ -1,5 +1,10 @@
 name: stock-alert-microservice-system
 
+x-common-spring: &common-spring
+  env_file: ../.env
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+
 services:
   postgres:
     image: postgres:16
@@ -43,7 +48,7 @@ services:
     depends_on:
       - kafka
     ports:
-      - "8081:8081"
+      - "8081:8081" # Registry stays on 8081 everywhere
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
       SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
@@ -56,40 +61,30 @@ services:
       - kafka
       - kafka-schema-registry
     ports:
-      - "8083:8080"
+      - "8082:8080" # Host 8082 -> Internal 8080 (UI default)
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://kafka-schema-registry:8081
 
   stock-alert-service:
+    <<: *common-spring
     build:
       context: ../
       dockerfile: stock_alert_service/Dockerfile
     container_name: stock-alert-service
     depends_on:
-      kafka:
-        condition: service_healthy
-      postgres:
-        condition: service_started
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/spring_java_internship_stock_alert_db
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      kafka: { condition: service_healthy }
+      postgres: { condition: service_started }
+    ports: [ "8080:8080" ]
 
   stock-monitor-service:
+    <<: *common-spring
     build:
       context: ../
       dockerfile: stock_monitor_service/Dockerfile
     container_name: stock-monitor-service
     depends_on:
-      kafka:
-        condition: service_healthy
-      postgres:
-        condition: service_started
-    ports:
-      - "8082:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/spring_java_internship_stock_alert_db
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      kafka: { condition: service_healthy }
+      postgres: { condition: service_started }
+    ports: [ "8083:8083" ] # Monitor is now 8083 everywhere

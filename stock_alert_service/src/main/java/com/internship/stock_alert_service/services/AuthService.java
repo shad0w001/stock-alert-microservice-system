@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -48,6 +47,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public Result<String> register(RegisterRequestDto request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             return Result.failure(AuthErrors.alreadyExists(request.getEmail()));

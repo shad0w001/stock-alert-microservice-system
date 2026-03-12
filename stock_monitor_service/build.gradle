@@ -25,11 +25,10 @@ repositories {
 }
 
 dependencies {
-    // Inherits Security, JWT, and Web from Shared
+    // Core logic + Security + JWT + Web
     implementation project(":shared")
 
-    // Specific to Monitor
-    implementation libs.bundles.web.starter
+    // Infrastructure specific to Monitoring
     implementation libs.bundles.kafka
     implementation libs.bundles.postgresql
 

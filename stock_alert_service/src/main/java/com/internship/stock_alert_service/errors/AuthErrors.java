@@ -17,7 +17,7 @@ public final class AuthErrors {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 
-        return ApiError.problem(
+        return ApiError.unauthorized(
                 "Authentication.InvalidRequest",
                 errorMessage
         );
