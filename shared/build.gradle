@@ -1,5 +1,7 @@
 plugins {
     id 'java-library'
+    alias(libs.plugins.spring.boot) apply false
+    alias(libs.plugins.spring.dependency.management)
 }
 
 java {
@@ -16,11 +18,21 @@ repositories {
 }
 
 dependencies {
+    api libs.bundles.web.starter
+    api libs.bundles.security
+    api libs.bundles.jwt
+
+    api libs.lombok
+    annotationProcessor libs.lombok
+
+    // Explicitly adding the BOM for libraries that don't have a version.ref in the catalog
+    implementation platform(libs.plugins.spring.boot.get().pluginId + ":spring-boot-dependencies:" + libs.versions.springBoot.get())
+
+    compileOnly libs.jakarta.servlet.api
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    api libs.lombok
-    annotationProcessor libs.lombok
 }
 
 test {

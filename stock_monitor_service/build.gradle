@@ -25,21 +25,18 @@ repositories {
 }
 
 dependencies {
+    // Core logic + Security + JWT + Web
     implementation project(":shared")
 
-    implementation libs.spring.boot.starter.data.jpa
-    implementation libs.spring.boot.starter.kafka
-    implementation libs.spring.boot.starter.web
-    implementation libs.kafka.avro.serializer
-    implementation libs.jackson.datatype.jsr310
+    // Infrastructure specific to Monitoring
+    implementation libs.bundles.kafka
+    implementation libs.bundles.postgresql
 
-    runtimeOnly libs.postgresql
     compileOnly libs.lombok
     annotationProcessor libs.lombok
 
     testImplementation libs.spring.boot.starter.test
     testImplementation libs.spring.kafka.test
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {

@@ -1,44 +1,39 @@
 plugins {
-    alias(libs.plugins.spring.boot)
-    alias(libs.plugins.spring.dependency.management)
-    id 'java'
+    // We define the plugins here once using the version catalog.
+    // 'apply false' means "don't run the plugin on the root project itself,"
+    // just make the version available for subprojects.
+    alias(libs.plugins.spring.boot) apply false
+    alias(libs.plugins.spring.dependency.management) apply false
 }
 
-group = 'com.internship'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+    group = 'com.internship'
+    version = '0.0.1-SNAPSHOT'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+    repositories {
+        mavenCentral()
+        // Centralize the Confluent repo so Shared or Services can all find Kafka Avro libs
+        maven { url 'https://packages.confluent.io/maven/' }
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+subprojects {
+    apply plugin: 'java'
+
+    // Ensure all modules use the same Java version
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
     }
-}
 
-repositories {
-    mavenCentral()
-}
+    // Force all modules to use the Spring Dependency Management BOM
+    // This is the "Magic" that fixes your "Could not find...:" errors
+    apply plugin: 'io.spring.dependency-management'
 
-dependencies {
-    implementation project(":shared")
-
-    implementation libs.spring.boot.starter.data.jpa
-    implementation libs.spring.boot.starter.kafka
-    implementation libs.spring.boot.starter.web
-
-    runtimeOnly libs.postgresql
-    compileOnly libs.lombok
-    annotationProcessor libs.lombok
-
-    testImplementation libs.spring.boot.starter.test
-    testImplementation libs.spring.kafka.test
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${libs.versions.springBoot.get()}"
+        }
+    }
 }
