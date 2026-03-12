@@ -16,13 +16,15 @@ repositories {
 }
 
 dependencies {
-    api libs.spring.boot.starter.web
-    api libs.spring.boot.starter.security
+    api libs.bundles.web.starter
+    api libs.bundles.security
 
     api libs.bundles.jwt
 
     api libs.lombok
     annotationProcessor libs.lombok
+
+    compileOnly libs.jakarta.servlet.api
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'

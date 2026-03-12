@@ -17,6 +17,8 @@ spring-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spr
 spring-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 
+jakarta-servlet-api = { group = "jakarta.servlet", name = "jakarta.servlet-api", version = "6.0.0" }
+
 # db stuff
 postgresql = { group = "org.postgresql", name = "postgresql" }
 jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
