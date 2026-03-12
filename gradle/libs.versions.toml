@@ -7,6 +7,7 @@ confluent = "7.5.0"
 # Versions
 java = "21"
 lombok = "1.18.30"
+flyway = "10.10.0"
 
 [libraries]
 spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
@@ -16,6 +17,8 @@ postgresql = { group = "org.postgresql", name = "postgresql" }
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
 jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
 spring-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
+spring-boot-starter-flyway = { group = "org.springframework.boot", name = "spring-boot-starter-flyway" }
+flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 
