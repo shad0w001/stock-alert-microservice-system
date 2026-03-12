@@ -1,3 +1,5 @@
+name: stock-alert-microservice-system
+
 services:
   postgres:
     image: postgres:16
@@ -10,11 +12,16 @@ services:
       - "5433:5432"
 
   kafka:
-    image: confluentinc/cp-server:7.5.0
+    image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
     hostname: kafka
     ports:
       - "9092:9092"
+    healthcheck:
+      test: [ "CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
@@ -25,6 +32,8 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
 
@@ -59,8 +68,10 @@ services:
       dockerfile: stock_alert_service/Dockerfile
     container_name: stock-alert-service
     depends_on:
-      - postgres
-      - kafka
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_started
     ports:
       - "8080:8080"
     environment:
@@ -74,7 +85,10 @@ services:
       dockerfile: stock_monitor_service/Dockerfile
     container_name: stock-monitor-service
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_started
     ports:
       - "8082:8080" # Mapping to 8082 to avoid 8081 clash if Schema Registry is on 8081
     environment:
