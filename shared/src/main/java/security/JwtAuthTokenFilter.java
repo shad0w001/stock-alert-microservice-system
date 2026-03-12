@@ -23,6 +23,7 @@ import java.util.UUID;
 @Slf4j
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
+    public static final String BEARER_HEADER = "Bearer ";
     private final JwtTokenProvider tokenProvider;
     private final UserDetailsService userDetailsService;
 
@@ -35,11 +36,13 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             if (token != null && tokenProvider.validateJwtToken(token)) {
                 UUID userId = tokenProvider.getUserIdFromToken(token);
 
-                // We pass the string version of UUID to loadUserByUsername
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userId.toString());
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -52,8 +55,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
+        if (StringUtils.hasText(bearer) && bearer.startsWith(BEARER_HEADER)) {
+            return bearer.substring(BEARER_HEADER.length());
         }
         return null;
     }
