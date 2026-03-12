@@ -3,27 +3,49 @@
 springBoot = "4.0.3"
 springDependencyManagement = "1.1.7"
 confluent = "7.5.0"
-
-# Versions
 java = "21"
 lombok = "1.18.30"
 flyway = "10.10.0"
+jjwt = "0.12.3"
 
 [libraries]
+
+# web
 spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
+spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
 spring-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
-spring-boot-starter-kafka = { group = "org.springframework.boot", name = "spring-boot-starter-kafka" }
-postgresql = { group = "org.postgresql", name = "postgresql" }
-kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
-jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
 spring-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+
+# db stuff
+postgresql = { group = "org.postgresql", name = "postgresql" }
+jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
+
+# flyway
 spring-boot-starter-flyway = { group = "org.springframework.boot", name = "spring-boot-starter-flyway" }
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 
-lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+# jwt
+jjwt-api = { group = "io.jsonwebtoken", name = "jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { group = "io.jsonwebtoken", name = "jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { group = "io.jsonwebtoken", name = "jjwt-jackson", version.ref = "jjwt" }
 
-spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
+# security
+spring-boot-starter-security = { group = "org.springframework.boot", name = "spring-boot-starter-security", version.ref = "springBoot" }
+spring-security-test = { group = "org.springframework.security", name = "spring-security-test" }
+
+# kafka
+spring-boot-starter-kafka = { group = "org.springframework.boot", name = "spring-boot-starter-kafka" }
+kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
 spring-kafka-test = { group = "org.springframework.kafka", name = "spring-kafka-test" }
+
+[bundles]
+web-starter = ["spring-boot-starter-web", "spring-boot-starter-data-jpa", "spring-boot-starter-validation"]
+jwt = ["jjwt-api", "jjwt-impl", "jjwt-jackson"]
+security = ["spring-boot-starter-security", "spring-security-test"]
+kafka = ["spring-boot-starter-kafka", "kafka-avro-serializer"]
+postgresql = ["postgresql", "jackson-datatype-jsr310"]
+flyway = ["spring-boot-starter-flyway", "flyway-database-postgresql"]
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
