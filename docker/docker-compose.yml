@@ -75,7 +75,6 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # Use the full name defined in the postgres service above
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/spring_java_internship_stock_alert_db
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
 
@@ -90,7 +89,7 @@ services:
       postgres:
         condition: service_started
     ports:
-      - "8082:8080" # Mapping to 8082 to avoid 8081 clash if Schema Registry is on 8081
+      - "8082:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/spring_java_internship_stock_alert_db
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
