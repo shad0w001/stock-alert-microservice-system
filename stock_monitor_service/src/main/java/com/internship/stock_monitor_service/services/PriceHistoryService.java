@@ -13,7 +13,6 @@ import result.Result;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class PriceHistoryService {
     private final PriceHistoryMapper priceHistoryMapper;
 
     @Transactional(readOnly = true)
-    public Result<List<PriceHistoryViewDto>> getHistoryForSymbol(String symbol) {
+    public Result<Map<String, List<PriceHistoryViewDto>>> getHistoryForSymbol(String symbol) {
         String normalizedSymbol = symbol.toUpperCase();
 
         List<PriceHistory> history = priceHistoryRepository.findTop100BySymbolOrderByRecordedAtDesc(normalizedSymbol);
@@ -33,6 +32,11 @@ public class PriceHistoryService {
             return Result.failure(PriceHistoryErrors.noDataFound(normalizedSymbol));
         }
 
-        return Result.success(priceHistoryMapper.toViewDtoList(history));
+        List<PriceHistoryViewDto> dtos = priceHistoryMapper.toViewDtoList(history);
+
+        Map<String, List<PriceHistoryViewDto>> response = Map.of(normalizedSymbol, dtos);
+
+        log.info("Returning history map for symbol: {}", normalizedSymbol);
+        return Result.success(response);
     }
 }
