@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
 @EnableCaching
-@SpringBootApplication(scanBasePackages = {"com.internship", "security", "result", "enums"})
+@SpringBootApplication(scanBasePackages = {"com.internship", "security", "result", "enums", "events"})
 public class StockMonitorServiceApplication {
 
 	public static void main(String[] args) {

@@ -41,15 +41,7 @@ public class StockService {
                 return Result.failure(StockErrors.notFound(normalizedSymbol));
             }
 
-            StockQuote entity = stockMapper.toEntity(response, normalizedSymbol);
-            stockQuoteRepository.save(entity);
-
-            PriceHistory history = PriceHistory.builder()
-                    .symbol(normalizedSymbol)
-                    .price(response.getCurrentPrice())
-                    .recordedAt(LocalDateTime.now())
-                    .build();
-            priceHistoryRepository.save(history);
+            var entity = stockMapper.toEntity(response, normalizedSymbol);
 
             return Result.success(stockMapper.toViewDto(entity));
 
