@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,12 +35,16 @@ public class Alert {
     private BigDecimal targetPrice;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "condition_type")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "condition_type", nullable = false)
     private AlertCondition conditionType;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "status", nullable = false)
     private AlertStatus status;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

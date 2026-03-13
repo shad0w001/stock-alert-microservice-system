@@ -21,28 +21,35 @@ public class CustomUserDetailsService implements UserDetailsService {
     // This is the ONLY method Spring Security calls automatically during login
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // Change logic to find by Email, because 'email' is what is passed from the Login DTO
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    public UserDetails loadUserByUsername(String input) throws UsernameNotFoundException {
+        User user;
 
-        return mapToUserDetails(user);
-    }
-
-    // You can keep this for your JWT Filter which uses the ID from the token
-    @Transactional(readOnly = true)
-    public UserDetails loadUserById(UUID id) throws UsernameNotFoundException {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + id));
+        // Logic: If the input is a UUID, look up by ID. If not, treat as email.
+        if (isUuid(input)) {
+            user = userRepository.findById(UUID.fromString(input))
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + input));
+        } else {
+            user = userRepository.findByEmail(input)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + input));
+        }
 
         return mapToUserDetails(user);
     }
 
     private UserDetails mapToUserDetails(User user) {
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
+                .withUsername(user.getId().toString()) // CRITICAL: Always use UUID string here
                 .password(user.getPasswordHash())
                 .authorities(Collections.emptyList())
                 .build();
+    }
+
+    private boolean isUuid(String str) {
+        try {
+            UUID.fromString(str);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }
