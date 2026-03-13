@@ -18,13 +18,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    // This is the ONLY method Spring Security calls automatically during login
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String input) throws UsernameNotFoundException {
         User user;
 
-        // Logic: If the input is a UUID, look up by ID. If not, treat as email.
         if (isUuid(input)) {
             user = userRepository.findById(UUID.fromString(input))
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + input));
@@ -38,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private UserDetails mapToUserDetails(User user) {
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getId().toString()) // CRITICAL: Always use UUID string here
+                .withUsername(user.getId().toString())
                 .password(user.getPasswordHash())
                 .authorities(Collections.emptyList())
                 .build();
