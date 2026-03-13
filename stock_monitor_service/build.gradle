@@ -36,6 +36,8 @@ dependencies {
 
     implementation libs.bundles.cache
 
+    implementation 'org.springframework.boot:spring-boot-restclient:4.0.3'
+
     compileOnly libs.lombok
 
     annotationProcessor libs.lombok

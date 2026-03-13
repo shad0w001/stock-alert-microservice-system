@@ -52,6 +52,8 @@ lombok-mapstruct-binding = { group = "org.projectlombok", name = "lombok-mapstru
 spring-boot-starter-cache = { group = "org.springframework.boot", name = "spring-boot-starter-cache" }
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
 
+spring-boot-restclient = { group = "org.springframework.boot", name = "spring-boot-restclient", version.ref = "springBoot" }
+
 [bundles]
 web-starter = ["spring-boot-starter-web", "spring-boot-starter-data-jpa", "spring-boot-starter-validation"]
 jwt = ["jjwt-api", "jjwt-impl", "jjwt-jackson"]
