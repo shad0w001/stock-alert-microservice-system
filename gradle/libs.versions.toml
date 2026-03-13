@@ -8,6 +8,7 @@ lombok = "1.18.30"
 flyway = "10.10.0"
 jjwt = "0.12.3"
 mapstruct = "1.6.3"
+caffeine = "3.1.8"
 
 [libraries]
 
@@ -47,6 +48,12 @@ mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstr
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
 lombok-mapstruct-binding = { group = "org.projectlombok", name = "lombok-mapstruct-binding", version = "0.2.0" }
 
+# caching
+spring-boot-starter-cache = { group = "org.springframework.boot", name = "spring-boot-starter-cache" }
+caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
+
+spring-boot-restclient = { group = "org.springframework.boot", name = "spring-boot-restclient", version.ref = "springBoot" }
+
 [bundles]
 web-starter = ["spring-boot-starter-web", "spring-boot-starter-data-jpa", "spring-boot-starter-validation"]
 jwt = ["jjwt-api", "jjwt-impl", "jjwt-jackson"]
@@ -54,6 +61,7 @@ security = ["spring-boot-starter-security", "spring-security-test"]
 kafka = ["spring-boot-starter-kafka", "kafka-avro-serializer"]
 postgresql = ["postgresql", "jackson-datatype-jsr310"]
 flyway = ["spring-boot-starter-flyway", "flyway-database-postgresql"]
+cache = ["spring-boot-starter-cache", "caffeine"]
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }

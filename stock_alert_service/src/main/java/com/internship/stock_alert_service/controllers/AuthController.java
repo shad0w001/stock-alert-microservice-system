@@ -29,7 +29,7 @@ public class AuthController {
 
         if (bindingResult.hasErrors()) {
             var error = AuthErrors.invalidRequest(bindingResult);
-            return ResponseEntity.badRequest().header(error.code()).body(error.message());
+            return ResponseEntity.badRequest().header(error.code()).body(error);
         }
 
         var result = authService.login(dto);
@@ -48,7 +48,7 @@ public class AuthController {
 
         if (bindingResult.hasErrors()) {
             var error = AuthErrors.invalidRequest(bindingResult);
-            return ResponseEntity.badRequest().header(error.code()).body(error.message());
+            return ResponseEntity.badRequest().header(error.code()).body(error);
         }
 
         var result = authService.register(dto);

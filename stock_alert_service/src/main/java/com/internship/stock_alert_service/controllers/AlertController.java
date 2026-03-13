@@ -48,7 +48,7 @@ public class AlertController {
         if (result.isFailure()) {
             return ResponseEntity
                     .status(result.getError().status())
-                    .body(result.getError().message());
+                    .body(result.getError());
         }
 
         return ResponseEntity.ok(result.getValue());
@@ -71,7 +71,7 @@ public class AlertController {
         if (result.isFailure()) {
             return ResponseEntity
                     .status(result.getError().status())
-                    .body(result.getError().message());
+                    .body(result.getError());
         }
 
         var alert = result.getValue();
@@ -91,7 +91,7 @@ public class AlertController {
         if (result.isFailure()) {
             return ResponseEntity
                     .status(result.getError().status())
-                    .body(result.getError().message());
+                    .body(result.getError());
         }
 
         return ResponseEntity.noContent().build();

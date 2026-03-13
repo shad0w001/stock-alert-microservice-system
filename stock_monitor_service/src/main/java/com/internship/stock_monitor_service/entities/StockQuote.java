@@ -23,16 +23,10 @@ import java.time.LocalDateTime;
 @Builder
 public class StockQuote {
     @Id
-    private String symbol;
-
-    @OneToOne
-    @MapsId // ensure the pk for these functions as the stock symbol for the company
-    @JoinColumn(name = "symbol")
-    private Company company;
+    private String symbol; // Just a String ID now
 
     @Column(name = "current_price", precision = 19, scale = 4)
     private BigDecimal currentPrice;
-
     @Column(name = "price_change")
     private BigDecimal priceChange;
 

@@ -13,7 +13,7 @@ public class SimpleUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String uuidString) {
         // since this has no access to the user db we just return an empty details with the uuid
         return User.withUsername(uuidString)
-                .password("")
+                .password("dummy")
                 .authorities(Collections.emptyList())
                 .build();
     }

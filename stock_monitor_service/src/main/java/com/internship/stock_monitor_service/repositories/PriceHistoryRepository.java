@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PriceHistoryRepository extends JpaRepository<PriceHistory, Long> {
-
-    List<PriceHistory> findBySymbolOrderByRecordedAtDesc(String symbol);
+    List<PriceHistory> findTop100BySymbolOrderByRecordedAtDesc(String symbol);
 }
