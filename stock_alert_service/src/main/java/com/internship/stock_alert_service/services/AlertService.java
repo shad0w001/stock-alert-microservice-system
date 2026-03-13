@@ -84,6 +84,7 @@ public class AlertService {
             // 2. Prepare Kafka Event
             AlertCreatedEvent event = AlertCreatedEvent.builder()
                     .alertId(saved.getId())
+                    .userId(userId)
                     .symbol(saved.getSymbol())
                     .targetPrice(saved.getTargetPrice())
                     .conditionType(saved.getConditionType())
