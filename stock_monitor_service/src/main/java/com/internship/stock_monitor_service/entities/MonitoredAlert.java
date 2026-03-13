@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,10 +38,12 @@ public class MonitoredAlert {
     private BigDecimal targetPrice;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "condition_type", nullable = false)
     private AlertCondition conditionType;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     private AlertStatus status;
 
