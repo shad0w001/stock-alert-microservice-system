@@ -1,6 +1,5 @@
 package com.internship.stock_alert_service.services;
 
-import com.internship.stock_alert_service.entities.Alert;
 import topics.KafkaTopics;
 import events.AlertTriggeredEvent;
 import com.internship.stock_alert_service.repositories.AlertRepository;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AlertTriggerListener {
+public class AlertEventConsumer {
 
     private final AlertRepository alertRepository;
 
@@ -28,16 +27,16 @@ public class AlertTriggerListener {
         log.info("Feedback received: Alert {} was triggered at price {}",
                 event.getAlertId(), event.getTriggerPrice());
 
-        var alert = alertRepository.findById(event.getAlertId());
+        var alert = alertRepository.findById(event.getAlertId()).orElse(null);
 
-        if (alert.isEmpty()) {
+        if (alert == null) {
             log.error("Received trigger for Alert ID {}, but it doesn't exist in Alert Service DB!",
                     event.getAlertId());
             return;
         }
 
-        alert.get().setStatus(AlertStatus.TRIGGERED);
-        alertRepository.save(alert.get());
+        alert.setStatus(AlertStatus.TRIGGERED);
+        alertRepository.save(alert);
 
         log.info("Successfully updated Alert {} status to TRIGGERED in main DB.", event.getAlertId());
     }

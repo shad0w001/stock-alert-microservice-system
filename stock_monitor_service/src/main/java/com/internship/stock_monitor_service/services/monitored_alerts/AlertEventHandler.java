@@ -1,4 +1,4 @@
-package com.internship.stock_monitor_service.services;
+package com.internship.stock_monitor_service.services.monitored_alerts;
 
 import topics.KafkaTopics;
 import events.AlertTriggeredEvent;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class AlertTriggerService {
+public class AlertEventHandler {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final MonitoredAlertRepository monitoredAlertRepository;

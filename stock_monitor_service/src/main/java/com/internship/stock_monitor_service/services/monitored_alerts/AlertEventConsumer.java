@@ -1,4 +1,4 @@
-package com.internship.stock_monitor_service.services;
+package com.internship.stock_monitor_service.services.monitored_alerts;
 
 import topics.KafkaTopics;
 import events.AlertCreatedEvent;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AlertConsumerService {
+public class AlertEventConsumer {
 
     private final MonitoredAlertRepository monitoredAlertRepository;
 

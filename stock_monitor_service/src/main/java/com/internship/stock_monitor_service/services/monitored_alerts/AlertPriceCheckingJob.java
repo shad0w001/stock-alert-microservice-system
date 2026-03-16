@@ -1,8 +1,9 @@
-package com.internship.stock_monitor_service.services;
+package com.internship.stock_monitor_service.services.monitored_alerts;
 
 import com.internship.stock_monitor_service.dtos.stocks.StockViewDto;
 import com.internship.stock_monitor_service.entities.MonitoredAlert;
 import com.internship.stock_monitor_service.repositories.MonitoredAlertRepository;
+import com.internship.stock_monitor_service.services.StockService;
 import enums.AlertStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,21 +13,18 @@ import result.Result;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class StockMonitorEngine {
+public class AlertPriceCheckingJob {
 
     private final MonitoredAlertRepository monitoredAlertRepository;
     private final StockService stockService;
-    private final AlertTriggerService alertTriggerService;
+    private final AlertEventHandler alertEventHandler;
 
-    // Cron: Runs every minute, Monday through Friday
-    // "0 * * * * MON-FRI"
-    @Scheduled(cron = "${app.monitor.cron:0 * * * * *}")
+    // cron runs every minute, monday through friday, in market working hours (9:30 to 15:59)
+    @Scheduled(cron = "0 * 9-15 * * MON-FRI", zone = "America/New_York")
     public void checkAlerts() {
         log.info("Monitoring engine heartbeat: Checking active alerts...");
 
@@ -63,9 +61,12 @@ public class StockMonitorEngine {
         };
 
         if (isTriggered) {
-            log.info("ALERT TRIGGERED: {} reached {} (Target:{} {})",
-                    alert.getSymbol(), currentPrice, alert.getStatus(), alert.getTargetPrice());
-            alertTriggerService.handleTrigger(alert, currentPrice);
+            log.info("ALERT TRIGGERED: {} reached {} (Condition: {} Target: {})",
+                    alert.getSymbol(),
+                    currentPrice,
+                    alert.getConditionType(),
+                    alert.getTargetPrice());
+            alertEventHandler.handleTrigger(alert, currentPrice);
         }
     }
 }
