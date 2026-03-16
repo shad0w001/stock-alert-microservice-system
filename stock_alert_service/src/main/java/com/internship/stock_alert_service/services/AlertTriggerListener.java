@@ -1,0 +1,44 @@
+package com.internship.stock_alert_service.services;
+
+import com.internship.stock_alert_service.entities.Alert;
+import topics.KafkaTopics;
+import events.AlertTriggeredEvent;
+import com.internship.stock_alert_service.repositories.AlertRepository;
+import enums.AlertStatus;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class AlertTriggerListener {
+
+    private final AlertRepository alertRepository;
+
+    @Transactional
+    @KafkaListener(
+            topics = KafkaTopics.STOCK_ALERT_TRIGGERED,
+            groupId = "${spring.kafka.consumer.group-id}",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
+    public void handleAlertTriggered(AlertTriggeredEvent event) {
+        log.info("Feedback received: Alert {} was triggered at price {}",
+                event.getAlertId(), event.getTriggerPrice());
+
+        var alert = alertRepository.findById(event.getAlertId());
+
+        if (alert.isEmpty()) {
+            log.error("Received trigger for Alert ID {}, but it doesn't exist in Alert Service DB!",
+                    event.getAlertId());
+            return;
+        }
+
+        alert.get().setStatus(AlertStatus.TRIGGERED);
+        alertRepository.save(alert.get());
+
+        log.info("Successfully updated Alert {} status to TRIGGERED in main DB.", event.getAlertId());
+    }
+}

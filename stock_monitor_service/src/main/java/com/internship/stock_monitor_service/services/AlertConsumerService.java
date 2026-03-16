@@ -19,7 +19,7 @@ public class AlertConsumerService {
 
     @KafkaListener(
             topics = KafkaTopics.STOCK_ALERT_CREATIONS,
-            groupId = "stock-monitor-group",
+            groupId = "${spring.kafka.consumer.group-id}",
             containerFactory = "kafkaListenerContainerFactory"
     )
     public void handleAlertCreated(AlertCreatedEvent event) {
@@ -39,7 +39,7 @@ public class AlertConsumerService {
 
     @KafkaListener(
             topics = KafkaTopics.STOCK_ALERT_DELETIONS,
-            groupId = "stock-monitor-group",
+            groupId = "${spring.kafka.consumer.group-id}",
             containerFactory = "kafkaListenerContainerFactory"
     )
     public void handleAlertDeleted(AlertDeletedEvent event) {

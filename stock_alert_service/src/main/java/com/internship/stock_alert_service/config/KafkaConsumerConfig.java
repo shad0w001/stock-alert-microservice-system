@@ -1,4 +1,4 @@
-package com.internship.stock_monitor_service.config;
+package com.internship.stock_alert_service.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -26,18 +26,14 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
-
         JacksonJsonDeserializer<Object> jsonDeserializer = new JacksonJsonDeserializer<>();
 
-        // CRITICAL: Tells Kafka it's okay to trust these packages from your shared module
         jsonDeserializer.addTrustedPackages("events", "enums", "java.util", "java.lang", "java.math");
-
         jsonDeserializer.setUseTypeHeaders(true);
 
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonJsonDeserializer.class);
 
