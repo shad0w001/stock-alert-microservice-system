@@ -10,6 +10,7 @@ import com.internship.stock_alert_service.mappers.AlertMapper;
 import com.internship.stock_alert_service.repositories.AlertRepository;
 import com.internship.stock_alert_service.repositories.UserRepository;
 import events.AlertCreatedEvent;
+import events.AlertDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import result.Result;
+import topics.KafkaTopics;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +33,6 @@ public class AlertService {
     private final UserRepository userRepository;
     private final AlertMapper alertMapper;
 
-    // String is the key (symbol), Object is the payload (AlertCreatedEvent)
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public Result<List<AlertViewDto>> getAlertsForUser(UUID userId) {
@@ -47,7 +48,6 @@ public class AlertService {
 
         if (alert == null) return Result.failure(AlertErrors.notFound(alertId));
 
-        // Security: Ensure user owns the alert they are requesting
         if (!alert.getUser().getId().equals(userId)) {
             return Result.failure(AlertErrors.unauthorized());
         }
@@ -74,14 +74,12 @@ public class AlertService {
         }
 
         try {
-            // 1. Persist to Alert Service Database
             Alert entity = alertMapper.createDtoToEntity(dto);
             entity.setUser(user);
             entity.setStatus(enums.AlertStatus.PENDING);
 
             Alert saved = alertRepository.save(entity);
 
-            // 2. Prepare Kafka Event
             AlertCreatedEvent event = AlertCreatedEvent.builder()
                     .alertId(saved.getId())
                     .userId(userId)
@@ -91,11 +89,7 @@ public class AlertService {
                     .status(saved.getStatus())
                     .build();
 
-            // 3. Send to Kafka (Topic name, Key, Payload)
-            // Using symbol as key ensures all events for the same stock go to the same partition
-            kafkaTemplate.send("stock-alerts-topic", event.getSymbol(), event);
-
-            log.info("Alert created and broadcasted for symbol: {}", event.getSymbol());
+            kafkaTemplate.send(KafkaTopics.STOCK_ALERT_CREATIONS, event.getSymbol(), event);
 
             return Result.success(alertMapper.toViewDto(saved));
 
@@ -116,10 +110,15 @@ public class AlertService {
             return Result.failure(AlertErrors.unauthorized());
         }
 
+        String symbol = existing.getSymbol();
         alertRepository.delete(existing);
 
-        // Note: For a robust system, you'd send an AlertDeletedEvent here
-        // so the Monitor service can remove it from its 'monitored_alerts' table.
+        AlertDeletedEvent deletedEvent = AlertDeletedEvent.builder()
+                .alertId(alertId)
+                .symbol(symbol)
+                .build();
+
+        kafkaTemplate.send(KafkaTopics.STOCK_ALERT_DELETIONS, symbol, deletedEvent);
 
         return Result.success(null);
     }

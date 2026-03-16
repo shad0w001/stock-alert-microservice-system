@@ -9,11 +9,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
 
-    // Finnhub Profile -> Entity
     @Mapping(target = "companyName", source = "name")
     @Mapping(target = "lastUpdated", expression = "java(java.time.LocalDateTime.now())")
     Company toEntity(FinnhubCompanyProfileResponse response);
 
-    // Entity -> View DTO
     CompanyViewDto toViewDto(Company company);
 }

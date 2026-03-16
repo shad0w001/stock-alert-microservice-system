@@ -1,7 +1,4 @@
 plugins {
-    // We define the plugins here once using the version catalog.
-    // 'apply false' means "don't run the plugin on the root project itself,"
-    // just make the version available for subprojects.
     alias(libs.plugins.spring.boot) apply false
     alias(libs.plugins.spring.dependency.management) apply false
 }
@@ -12,7 +9,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-        // Centralize the Confluent repo so Shared or Services can all find Kafka Avro libs
         maven { url 'https://packages.confluent.io/maven/' }
     }
 }
@@ -20,15 +16,12 @@ allprojects {
 subprojects {
     apply plugin: 'java'
 
-    // Ensure all modules use the same Java version
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
         }
     }
 
-    // Force all modules to use the Spring Dependency Management BOM
-    // This is the "Magic" that fixes your "Could not find...:" errors
     apply plugin: 'io.spring.dependency-management'
 
     dependencyManagement {
