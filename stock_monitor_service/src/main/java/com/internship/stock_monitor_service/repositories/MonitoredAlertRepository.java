@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface MonitoredAlertRepository extends JpaRepository<MonitoredAlert, Long> {
 
+    List<MonitoredAlert> findByStatus(AlertStatus status);
+
     List<MonitoredAlert> findBySymbolAndStatus(String symbol, AlertStatus status);
 }
