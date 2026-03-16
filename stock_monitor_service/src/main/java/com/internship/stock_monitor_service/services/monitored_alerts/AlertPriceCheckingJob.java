@@ -24,9 +24,8 @@ public class AlertPriceCheckingJob {
     private final AlertEventHandler alertEventHandler;
 
     // cron runs every minute, monday through friday, in market working hours (9:30 to 15:59)
-    @Scheduled(cron = "0 * 9-15 * * MON-FRI", zone = "America/New_York")
+    @Scheduled(cron = "0 * 9-15 * * MON-FRI", zone = "UTC")
     public void checkAlerts() {
-        log.info("Monitoring engine heartbeat: Checking active alerts...");
 
         List<MonitoredAlert> activeAlerts = monitoredAlertRepository.findByStatus(AlertStatus.PENDING);
 
