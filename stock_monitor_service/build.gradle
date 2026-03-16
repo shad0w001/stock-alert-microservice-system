@@ -25,10 +25,8 @@ repositories {
 }
 
 dependencies {
-    // Core logic + Security + JWT + Web
     implementation project(":shared")
 
-    // Infrastructure specific to Monitoring
     implementation libs.bundles.kafka
     implementation libs.bundles.postgresql
 

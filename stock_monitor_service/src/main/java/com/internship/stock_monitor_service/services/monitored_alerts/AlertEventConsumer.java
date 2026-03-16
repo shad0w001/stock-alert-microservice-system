@@ -23,7 +23,10 @@ public class AlertEventConsumer {
             containerFactory = "kafkaListenerContainerFactory"
     )
     public void handleAlertCreated(AlertCreatedEvent event) {
-        log.info("Received AlertCreatedEvent for symbol: {} [ID: {}]", event.getSymbol(), event.getAlertId());
+
+        if(event == null){
+            return;
+        }
 
         MonitoredAlert monitoredAlert = MonitoredAlert.builder()
                 .alertId(event.getAlertId())
@@ -34,7 +37,6 @@ public class AlertEventConsumer {
                 .build();
 
         monitoredAlertRepository.save(monitoredAlert);
-        log.info("Alert {} added to monitoring watchlist.", event.getAlertId());
     }
 
     @KafkaListener(
@@ -43,12 +45,10 @@ public class AlertEventConsumer {
             containerFactory = "kafkaListenerContainerFactory"
     )
     public void handleAlertDeleted(AlertDeletedEvent event) {
-        log.info("Received AlertDeletedEvent for Alert ID: {}", event.getAlertId());
 
         if (monitoredAlertRepository.existsById(event.getAlertId())) {
 
             monitoredAlertRepository.deleteById(event.getAlertId());
-            log.info("Alert {} removed from monitoring watchlist.", event.getAlertId());
 
         } else {
             log.warn("Attempted to delete Alert {}, but it was not found in watchlist.", event.getAlertId());

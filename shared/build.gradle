@@ -25,7 +25,6 @@ dependencies {
     api libs.lombok
     annotationProcessor libs.lombok
 
-    // Explicitly adding the BOM for libraries that don't have a version.ref in the catalog
     implementation platform(libs.plugins.spring.boot.get().pluginId + ":spring-boot-dependencies:" + libs.versions.springBoot.get())
 
     compileOnly libs.jakarta.servlet.api

@@ -36,7 +36,6 @@ public class PriceHistoryService {
 
         Map<String, List<PriceHistoryViewDto>> response = Map.of(normalizedSymbol, dtos);
 
-        log.info("Returning history map for symbol: {}", normalizedSymbol);
         return Result.success(response);
     }
 }

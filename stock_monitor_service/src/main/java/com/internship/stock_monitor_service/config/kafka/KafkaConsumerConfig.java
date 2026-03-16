@@ -29,7 +29,6 @@ public class KafkaConsumerConfig {
 
         JacksonJsonDeserializer<Object> jsonDeserializer = new JacksonJsonDeserializer<>();
 
-        // CRITICAL: Tells Kafka it's okay to trust these packages from your shared module
         jsonDeserializer.addTrustedPackages("events", "enums", "java.util", "java.lang", "java.math");
 
         jsonDeserializer.setUseTypeHeaders(true);

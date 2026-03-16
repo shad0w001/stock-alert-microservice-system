@@ -33,7 +33,6 @@ public class AlertService {
     private final UserRepository userRepository;
     private final AlertMapper alertMapper;
 
-    // String is the key (symbol), Object is the payload (AlertCreatedEvent)
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public Result<List<AlertViewDto>> getAlertsForUser(UUID userId) {
@@ -91,8 +90,6 @@ public class AlertService {
                     .build();
 
             kafkaTemplate.send(KafkaTopics.STOCK_ALERT_CREATIONS, event.getSymbol(), event);
-
-            log.info("Alert created and broadcasted for symbol: {}", event.getSymbol());
 
             return Result.success(alertMapper.toViewDto(saved));
 

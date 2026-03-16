@@ -24,8 +24,6 @@ public class AlertEventConsumer {
             containerFactory = "kafkaListenerContainerFactory"
     )
     public void handleAlertTriggered(AlertTriggeredEvent event) {
-        log.info("Feedback received: Alert {} was triggered at price {}",
-                event.getAlertId(), event.getTriggerPrice());
 
         var alert = alertRepository.findById(event.getAlertId()).orElse(null);
 
@@ -37,7 +35,5 @@ public class AlertEventConsumer {
 
         alert.setStatus(AlertStatus.TRIGGERED);
         alertRepository.save(alert);
-
-        log.info("Successfully updated Alert {} status to TRIGGERED in main DB.", event.getAlertId());
     }
 }
